@@ -475,6 +475,10 @@ endif
 FIND_LEAVES_EXCLUDES := $(addprefix --prune=, $(SCAN_EXCLUDE_DIRS) .repo .git)
 
 -include vendor/extra/BoardConfigExtra.mk
+ifneq ($(HALCYON_BUILD),)
+include vendor/halcyon/config/HalcyonConfig.mk
+-include vendor/enchanted/EnchantedConfig.mk
+endif
 
 # The build system exposes several variables for where to find the kernel
 # headers:
@@ -1247,6 +1251,10 @@ include $(BUILD_SYSTEM)/sysprop_config.mk
 # consistency with those defined in BoardConfig.mk files.
 include $(BUILD_SYSTEM)/android_soong_config_vars.mk
 
+ifneq ($(HALCYON_BUILD),)
+include vendor/halcyon/config/sepolicy.mk
+endif
+
 # EMMA_INSTRUMENT is set to true when coverage is enabled. Creates a suffix to
 # differeciate the coverage version of ninja files. This will save 5 minutes of
 # build time used to regenerate ninja.
@@ -1264,6 +1272,9 @@ endif
 
 SOONG_VARIABLES :=
 SOONG_EXTRA_VARIABLES :=
+
+# Include any vendor specific config.mk file
+-include vendor/*/build/core/config.mk
 
 include $(BUILD_SYSTEM)/dumpvar.mk
 
